@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:bezier_chart/bezier_chart.dart';
 
 class CovidTracker extends StatefulWidget {
   const CovidTracker({Key key}) : super(key: key);
@@ -160,15 +159,6 @@ class _CovidTrackerState extends State<CovidTracker> {
                 ),
               ],
             ),
-            bezierChart(covid, currentIndex),
-            /* FutureBuilder<List<Covid19Tracker>>(
-                future: covid,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return bezierChart(snapshot.data);
-                  }
-                  return CircularProgressIndicator();
-                }), */
           ],
         ),
       ),
@@ -199,53 +189,4 @@ Widget gridView(List<Covid19Tracker> data, int index, Orientation orientation) {
       ),
     ),
   );
-}
-
-Widget bezierChart(Future<List<Covid19Tracker>> data, int curentIndex) {
-  return FutureBuilder<List<Covid19Tracker>>(
-      future: data,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Flexible(
-            flex: 1,
-            child: BezierChart(
-              bezierChartScale: BezierChartScale.CUSTOM,
-              xAxisCustomValues: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90],
-              config: BezierChartConfig(
-                startYAxisFromNonZeroValue: false,
-                bubbleIndicatorColor: Colors.white.withOpacity(0.9),
-                footerHeight: 40,
-                verticalIndicatorStrokeWidth: 3.0,
-                verticalIndicatorColor: Colors.black26,
-                showVerticalIndicator: true,
-                verticalIndicatorFixedPosition: false,
-                displayYAxis: true,
-                stepsYAxis: 10,
-                backgroundGradient: LinearGradient(
-                  colors: [
-                    Colors.red[300],
-                    Colors.red[400],
-                    Colors.red[400],
-                    Colors.red[500],
-                    Colors.red,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                snap: true,
-              ),
-              series: [
-                BezierLine(
-                    lineColor: Colors.black,
-                    data: snapshot.data
-                        .map((e) => DataPoint(
-                            value: snapshot.data[curentIndex].active.toDouble(),
-                            xAxis: snapshot.data[curentIndex].date))
-                        .toList()),
-              ],
-            ),
-          );
-        }
-        return CircularProgressIndicator();
-      });
 }
